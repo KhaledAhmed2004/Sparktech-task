@@ -7,4 +7,5 @@ export interface ICourse {
   lessons: Types.ObjectId[];
   likes: Types.ObjectId[];
   views: number;
+  isDeleted?: boolean;
 }
