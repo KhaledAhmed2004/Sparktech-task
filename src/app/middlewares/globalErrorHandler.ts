@@ -54,7 +54,7 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     message = error.message;
     errorSource = [
       {
-        path: "",
+        path: error.path || "",
         message: error.message,
       },
     ];

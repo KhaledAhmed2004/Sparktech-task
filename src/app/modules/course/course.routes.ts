@@ -14,6 +14,10 @@ rotuer.patch(
   validateRequest(CourseValidations.updateCourseValidationSchema),
   CourseControllers.updateCourse
 );
+rotuer.get("/:id", CourseControllers.getSingleCourse);
+
+rotuer.patch("/enroll/:id", CourseControllers.enrollCourse);
+
 rotuer.delete("/:id", CourseControllers.deleteCourse);
 
 export const CourseRoute = rotuer;

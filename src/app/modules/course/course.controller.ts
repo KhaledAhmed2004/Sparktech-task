@@ -34,4 +34,35 @@ const deleteCourse = catchAsync(async (req, res) => {
   });
 });
 
-export const CourseControllers = { createCourse, updateCourse, deleteCourse };
+const enrollCourse = catchAsync(async (req, res) => {
+  const { id } = req.params; // id of the coruse
+  const userId = "682b884a22b8291f0e887e0d"; // id of the student
+  const result = await CourseServices.enrollCourse(id, userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Course enrolled successfully",
+    data: result,
+  });
+});
+const getSingleCourse = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const userId = "682b884a22b8291f0e887e0d"; // Replace this with real logged-in user ID
+
+  const result = await CourseServices.getSingleCourseFromDB(id, userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Course retrieved successfully",
+    data: result,
+  });
+});
+
+export const CourseControllers = {
+  createCourse,
+  updateCourse,
+  deleteCourse,
+  enrollCourse,
+  getSingleCourse,
+};

@@ -7,9 +7,12 @@ const CourseSchema = new Schema<ICourse>(
     description: { type: String },
     teacher: { type: Schema.Types.ObjectId, ref: "Teacher", required: true },
     lessons: { type: [Schema.Types.ObjectId], ref: "Lesson", default: [] },
-    likes: { type: [Schema.Types.ObjectId], ref: "User", default: [] },
+    likeCount: { type: Number, default: 0, index: true },
     views: { type: Number, default: 0 },
     isDeleted: { type: Boolean, default: false },
+    viewedUsers: { type: [Schema.Types.ObjectId], ref: "Student" },
+        totalFeedback: { type: Number, default: 0 },
+
   },
   {
     timestamps: true,

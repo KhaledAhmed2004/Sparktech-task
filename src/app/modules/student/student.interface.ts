@@ -7,4 +7,5 @@ export interface IStudent {
     courseId: Types.ObjectId;
     completedLessons: Types.ObjectId[];
   };
+  followingTeachers: Types.ObjectId[];
 }

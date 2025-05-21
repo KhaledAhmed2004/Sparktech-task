@@ -4,6 +4,7 @@ import { AuthValidations } from "./auth.validaction";
 import { AuthControllers } from "./auth.controller";
 const router = express.Router();
 
+// user login
 router.post(
   "/login",
   validateRequest(AuthValidations.LoginValidactionSchema),

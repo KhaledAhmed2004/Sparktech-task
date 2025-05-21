@@ -17,6 +17,11 @@ const StudentSchema = new Schema<IStudent>(
         default: [],
       },
     },
+    followingTeachers: {
+      type: [Schema.Types.ObjectId],
+      ref: "Teacher",
+      default: [],
+    },
   },
   {
     timestamps: true,

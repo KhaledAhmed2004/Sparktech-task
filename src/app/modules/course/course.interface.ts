@@ -5,7 +5,9 @@ export interface ICourse {
   description?: string;
   teacher: Types.ObjectId;
   lessons: Types.ObjectId[];
-  likes: Types.ObjectId[];
+  likeCount: number;
   views: number;
   isDeleted?: boolean;
+  viewedUsers: Types.ObjectId[];
+  totalFeedback: number;
 }

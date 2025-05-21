@@ -1,24 +1,25 @@
+import httpStatus from "http-status";
 import { TErrorSources, TGenericErrorResponse } from "../interface/error";
 
-const handleDuplicateError = (error: any): TGenericErrorResponse => {
-  // Extract value within double quotes using regex
-  const match = error.message.match(/"([^"]*)"/);
+const handleDuplicateError = (err: any): TGenericErrorResponse => {
+  const statusCode = httpStatus.CONFLICT;
 
-  // The extracted value will be in the first capturing group
-  const extractedMessage = match && match[1];
+  // Extract the duplicated field name
+  const fieldName = Object.keys(err.keyPattern || {})[0] || "unknown";
 
-  // Create an error source array with the extracted message
+  // Extract the value that caused the duplication
+  const duplicateValue = err.keyValue?.[fieldName] || "This value";
+
   const errorSources: TErrorSources = [
-    { path: "", message: `${extractedMessage} already exists` },
+    {
+      path: fieldName || "",
+      message: `${duplicateValue} already exists`,
+    },
   ];
 
-  // Set the status code to 400 for Bad Request
-  const statusCode = 400;
-
-  // Return the error response with status code, message, and error source
   return {
     statusCode,
-    message: "Duplicate Key Error",
+    message: "Duplicate Entry",
     errorSources,
   };
 };
