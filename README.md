@@ -1,4 +1,3 @@
-
 # Course Learning App (LMS Backend)
 
 A robust and scalable Learning Management System (LMS) backend built with **Node.js**, **Express**, **MongoDB**, and **TypeScript**. This API connects students and teachers through structured courses, lessons, topics, quizzes, and performance tracking — designed to power interactive and engaging online education platforms.
@@ -30,93 +29,121 @@ A robust and scalable Learning Management System (LMS) backend built with **Node
 
 ## 🧰 Tech Stack
 
-| Layer             | Technology                     |
-| ----------------- | ------------------------------ |
-| Backend           | Node.js, Express               |
-| Language          | TypeScript                     |
-| Database          | MongoDB, Mongoose              |
-| Authentication    | JWT                            |
-| Validation        | Zod                            |
-| Error Handling    | Custom global handler          |
+| Layer          | Technology            |
+| -------------- | --------------------- |
+| Backend        | Node.js, Express      |
+| Language       | TypeScript            |
+| Database       | MongoDB, Mongoose     |
+| Authentication | JWT                   |
+| Validation     | Zod                   |
+| Error Handling | Custom global handler |
 
 ---
 
-# Api list
+# 📘 API Structure (Grouped by Role)
 
-## 📘 Course Endpoints
-
-| Method | Full URL                                                                                                                                | Description                                 | Access            |
-| ------ | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | ----------------- |
-| POST   | [https://sparktech-task.vercel.app/api/v1/courses/create](https://sparktech-task.vercel.app/api/v1/courses/create)                      | Create a new course                         | Teacher only      |
-| PATCH  | [https://sparktech-task.vercel.app/api/v1/courses/\:courseId](https://sparktech-task.vercel.app/api/v1/courses/:courseId)               | Update an existing course (partial)         | Teacher only      |
-| GET    | [https://sparktech-task.vercel.app/api/v1/courses/\:courseId](https://sparktech-task.vercel.app/api/v1/courses/:courseId)               | Get course details                          | Teacher & Student |
-| POST   | [https://sparktech-task.vercel.app/api/v1/courses/enroll/\:courseId](https://sparktech-task.vercel.app/api/v1/courses/enroll/:courseId) | Enroll in a course                          | Student only      |
-| DELETE | [https://sparktech-task.vercel.app/api/v1/courses/\:courseId](https://sparktech-task.vercel.app/api/v1/courses/:courseId)               | Soft-delete a course                        | Teacher only      |
-| GET    | [https://sparktech-task.vercel.app/api/v1/courses](https://sparktech-task.vercel.app/api/v1/courses)                                    | Get all courses (with pagination/filtering) | Public (any user) |
+**Base API URL:** `https://sparktech-task.vercel.app/api/v1`
 
 ---
 
-## 🎓 Lesson Endpoints
+### 🔐 **Auth & User Routes**
 
-| Method | Full URL                                                                                                                                | Description                                      | Access       |
-| ------ | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ------------ |
-| POST   | [https://sparktech-task.vercel.app/api/v1/lessons/create/\:courseId](https://sparktech-task.vercel.app/api/v1/lessons/create/:courseId) | Create a new lesson attached to a course         | Teacher only |
-| GET    | [https://sparktech-task.vercel.app/api/v1/lessons/course/\:courseId](https://sparktech-task.vercel.app/api/v1/lessons/course/:courseId) | Get all non-deleted lessons of a specific course | Public       |
-| GET    | [https://sparktech-task.vercel.app/api/v1/lessons/\:lessonId](https://sparktech-task.vercel.app/api/v1/lessons/:lessonId)               | Get a single lesson by ID                        | Public       |
-| PUT    | [https://sparktech-task.vercel.app/api/v1/lessons/\:lessonId](https://sparktech-task.vercel.app/api/v1/lessons/:lessonId)               | Update a lesson's details                        | Teacher only |
-| DELETE | [https://sparktech-task.vercel.app/api/v1/lessons/\:lessonId](https://sparktech-task.vercel.app/api/v1/lessons/:lessonId)               | Soft-delete a lesson and remove from course      | Teacher only |
+#### Auth Routes
 
----
+| Method | Path          | Description |
+| ------ | ------------- | ----------- |
+| POST   | `/auth/login` | User login  |
 
-## 📘 Topic Endpoints
+#### User Routes
 
-| Method | Full URL                                                                                                                              | Description                                     | Access            |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ----------------- |
-| POST   | [https://sparktech-task.vercel.app/api/v1/topics/create/\:lessonId](https://sparktech-task.vercel.app/api/v1/topics/create/:lessonId) | Create a new topic under a specific lesson      | Teacher only      |
-| GET    | [https://sparktech-task.vercel.app/api/v1/topics/lesson/\:lessonId](https://sparktech-task.vercel.app/api/v1/topics/lesson/:lessonId) | Get all topics under a specific lesson          | Teacher & Student |
-| GET    | [https://sparktech-task.vercel.app/api/v1/topics/\:id](https://sparktech-task.vercel.app/api/v1/topics/:id)                           | Get a single topic by ID                        | Teacher & Student |
-| PATCH  | [https://sparktech-task.vercel.app/api/v1/topics/\:id](https://sparktech-task.vercel.app/api/v1/topics/:id)                           | Update a topic                                  | Teacher only      |
-| DELETE | [https://sparktech-task.vercel.app/api/v1/topics/\:id](https://sparktech-task.vercel.app/api/v1/topics/:id)                           | Soft-delete a topic (mark as `isDeleted: true`) | Teacher only      |
+| Method | Path                    | Description          |
+| ------ | ----------------------- | -------------------- |
+| POST   | `/users/create-student` | Create a new student |
+| POST   | `/users/create-teacher` | Create a new teacher |
 
 ---
 
-## 📘 Course Performance Tracking Endpoint
+### 👩‍🏫 **Teacher Routes**
 
-| Method | Full URL                                                                                                                                          | Description                                                       | Access                            |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------- |
-| GET    | [https://sparktech-task.vercel.app/api/v1/courses/\:courseId/performance](https://sparktech-task.vercel.app/api/v1/courses/:courseId/performance) | Get performance stats for a course (likes, views, feedback count) | Student & Teacher (Authenticated) |
+#### Courses
+
+| Method | Path                      | Description            |
+| ------ | ------------------------- | ---------------------- |
+| POST   | `/course/create`          | Create new course      |
+| PATCH  | `/course/:courseId`       | Update course          |
+| DELETE | `/course/:courseId`       | Soft-delete course     |
+| GET    | `/course/:courseId`       | Get single course      |
+| GET    | `/course/performance/:id` | Get course performance |
+
+#### Lessons
+
+| Method | Path                        | Description           |
+| ------ | --------------------------- | --------------------- |
+| POST   | `/lessons/create/:courseId` | Create lesson         |
+| PUT    | `/lessons/:lessonId`        | Update lesson         |
+| DELETE | `/lessons/:lessonId`        | Delete lesson         |
+| GET    | `/lessons/course/:courseId` | Get lessons by course |
+| GET    | `/lessons/:lessonId`        | Get single lesson     |
+
+#### Topics
+
+| Method | Path                       | Description          |
+| ------ | -------------------------- | -------------------- |
+| POST   | `/topics/create/:lessonId` | Create topic         |
+| PATCH  | `/topics/:id`              | Update topic         |
+| DELETE | `/topics/:id`              | Delete topic         |
+| GET    | `/topics/lesson/:lessonId` | Get topics by lesson |
+| GET    | `/topics/:id`              | Get single topic     |
+
+#### Quizzes
+
+| Method | Path                       | Description             |
+| ------ | -------------------------- | ----------------------- |
+| POST   | `/quizzes/create/:topicId` | Create quiz under topic |
+| PATCH  | `/quizzes/:id`             | Update quiz             |
+| DELETE | `/quizzes/:id`             | Delete quiz             |
+| GET    | `/quizzes/:id`             | Get single quiz         |
+| GET    | `/quizzes/by-topic/:id`    | Get quizzes for a topic |
 
 ---
 
-## 🧠 Quiz API Documentation
+### 🎓 **Student Routes**
 
-| Method | Full URL                                                                                                                                                     | Description                                     | Access                      |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------- | --------------------------- |
-| POST   | [https://sparktech-task.vercel.app/api/v1/quizzes](https://sparktech-task.vercel.app/api/v1/quizzes)                                                         | Create a new quiz                               | Public/Admin? (unspecified) |
-| GET    | [https://sparktech-task.vercel.app/api/v1/quizzes](https://sparktech-task.vercel.app/api/v1/quizzes)                                                         | Retrieve all quizzes                            | Public                      |
-| GET    | [https://sparktech-task.vercel.app/api/v1/quizzes/topic/\:topicId](https://sparktech-task.vercel.app/api/v1/quizzes/topic/:topicId)                          | Get all quizzes by topic ID                     | Public                      |
-| GET    | [https://sparktech-task.vercel.app/api/v1/quizzes/\:id](https://sparktech-task.vercel.app/api/v1/quizzes/:id)                                                | Get a quiz by its ID                            | Public                      |
-| PATCH  | [https://sparktech-task.vercel.app/api/v1/quizzes/\:id](https://sparktech-task.vercel.app/api/v1/quizzes/:id)                                                | Update a quiz by ID                             | Admin? (unspecified)        |
-| DELETE | [https://sparktech-task.vercel.app/api/v1/quizzes/\:id](https://sparktech-task.vercel.app/api/v1/quizzes/:id)                                                | Delete a quiz by ID                             | Admin? (unspecified)        |
-| POST   | [https://sparktech-task.vercel.app/api/v1/quizzes/submit](https://sparktech-task.vercel.app/api/v1/quizzes/submit)                                           | Submit a quiz attempt by a student              | Student/User                |
-| GET    | [https://sparktech-task.vercel.app/api/v1/quizzes/\:id/for-student/\:studentId](https://sparktech-task.vercel.app/api/v1/quizzes/:id/for-student/:studentId) | Get a quiz for a student (e.g., prevent retake) | Student/User                |
+#### Course Enrollment & Feedback
+
+| Method | Path                            | Description           |
+| ------ | ------------------------------- | --------------------- |
+| POST   | `/course/enroll/:courseId`      | Enroll in a course    |
+| GET    | `/course`                       | Get all courses       |
+| GET    | `/course/enrolled-students/:id` | Get enrolled students |
+
+#### Like & Unlike
+
+| Method | Path                | Description     |
+| ------ | ------------------- | --------------- |
+| POST   | `/like/:courseId`   | Like a course   |
+| POST   | `/unlike/:courseId` | Unlike a course |
+
+#### Feedback
+
+| Method | Path                   | Description               |
+| ------ | ---------------------- | ------------------------- |
+| GET    | `/feedback/course/:id` | Get feedback by course    |
+| POST   | `/feedback/course/:id` | Submit feedback (student) |
+
+#### Student Profile Actions
+
+| Method | Path                         | Description              |
+| ------ | ---------------------------- | ------------------------ |
+| PATCH  | `/student/enroll/:id`        | Enroll course (internal) |
+| POST   | `/student/follow/:teacherId` | Follow teacher           |
+
+#### Quiz Actions
+
+| Method | Path                        | Description              |
+| ------ | --------------------------- | ------------------------ |
+| GET    | `/quizzes/student-view/:id` | Get quiz without answers |
+| POST   | `/quizzes/submit/:quizId`   | Submit quiz answers      |
 
 ---
-
-## 📘 Like/Unlike Course API Documentation
-
-| Method | Full URL                                                                                                                            | Description                      | Access                       |
-| ------ | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- | ---------------------------- |
-| POST   | [https://sparktech-task.vercel.app/api/v1/likes/like/\:courseId](https://sparktech-task.vercel.app/api/v1/likes/like/:courseId)     | Like a specific course           | Auth required (Bearer Token) |
-| POST   | [https://sparktech-task.vercel.app/api/v1/likes/unlike/\:courseId](https://sparktech-task.vercel.app/api/v1/likes/unlike/:courseId) | Unlike a previously liked course | Auth required (Bearer Token) |
-
----
-
-## 📘 Student API Documentation
-
-| Method | Full URL                                                                                                                                      | Description                  | Access             |
-| ------ | --------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | ------------------ |
-| PATCH  | [https://sparktech-task.vercel.app/api/v1/students/enroll/\:id](https://sparktech-task.vercel.app/api/v1/students/enroll/:id)                 | Enroll a student in a course | Authenticated User |
-| POST   | [https://sparktech-task.vercel.app/api/v1/students/follow/\:teacherId](https://sparktech-task.vercel.app/api/v1/students/follow/:teacherId)   | Follow a teacher             | Authenticated User |
-| POST   | [https://sparktech-task.vercel.app/api/v1/students/feedback/\:courseId](https://sparktech-task.vercel.app/api/v1/students/feedback/:courseId) | Create feedback for a course | Authenticated User |
 
