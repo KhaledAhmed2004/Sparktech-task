@@ -40,6 +40,36 @@ A robust and scalable Learning Management System (LMS) backend built with **Node
 
 ---
 
+
+
+## 📦 Postman Collection
+
+You can use the provided Postman collection to test all the available APIs.
+
+🔗 **[⬇️ Download Postman Collection](https://drive.google.com/uc?export=download&id=1_Ld3avm3WkRq0OfqYe6KuM2jybcGQH9q)**
+
+---
+
+✅ **Tip:**
+Import the collection into your Postman workspace and use the environment variables provided to simplify authentication and testing.
+
+> ⚠️ **Important Warning**
+> After logging in, make sure to **copy the access token** and set it in the appropriate environment variable:
+>
+> * For **Students**, set it to `studentToken`
+> * For **Teachers**, set it to `teacherToken`
+
+**✅ DON’T FORGET TO SAVE THE CHANGES AFTER PASTING THE TOKEN!**
+
+---
+
+💡 **Note:**
+If any route gives you an issue, kindly **double-check both the README and the Postman collection** to ensure you’re using the correct endpoint, method, and required data.
+
+
+
+---
+
 # 📘 API Structure (Grouped by Role)
 
 **Base API URL:** `https://sparktech-task.vercel.app/api/v1`
@@ -69,11 +99,11 @@ A robust and scalable Learning Management System (LMS) backend built with **Node
 
 | Method | Path                      | Description            |
 | ------ | ------------------------- | ---------------------- |
-| POST   | `/course/create`          | Create new course      |
-| PATCH  | `/course/:courseId`       | Update course          |
-| DELETE | `/course/:courseId`       | Soft-delete course     |
-| GET    | `/course/:courseId`       | Get single course      |
-| GET    | `/course/performance/:id` | Get course performance |
+| POST   | `/courses/create`          | Create new course      |
+| PATCH  | `/courses/:courseId`       | Update course          |
+| DELETE | `/courses/:courseId`       | Soft-delete course     |
+| GET    | `/courses/:courseId`       | Get single course      |
+| GET    | `/courses/enrolled-students/:courseId` | Get enrolled students |
 
 #### Lessons
 
@@ -105,6 +135,12 @@ A robust and scalable Learning Management System (LMS) backend built with **Node
 | GET    | `/quizzes/:id`             | Get single quiz         |
 | GET    | `/quizzes/by-topic/:id`    | Get quizzes for a topic |
 
+#### Analytics
+
+| Method | Path                       | Description             |
+| ------ | -------------------------- | ----------------------- |
+| GET    | `/courses/performance/:id`  | Get course performance  |
+
 ---
 
 ### 🎓 **Student Routes**
@@ -113,16 +149,16 @@ A robust and scalable Learning Management System (LMS) backend built with **Node
 
 | Method | Path                            | Description           |
 | ------ | ------------------------------- | --------------------- |
-| POST   | `/course/enroll/:courseId`      | Enroll in a course    |
-| GET    | `/course`                       | Get all courses       |
-| GET    | `/course/enrolled-students/:id` | Get enrolled students |
+| POST   | `/courses/enroll/:courseId`      | Enroll in a course    |
+| GET    | `/courses`                       | Get all courses       |
+| GET    | `/courses/:coursesId`                       | Get courses ditels       |
 
 #### Like & Unlike
 
 | Method | Path                | Description     |
 | ------ | ------------------- | --------------- |
-| POST   | `/like/:courseId`   | Like a course   |
-| POST   | `/unlike/:courseId` | Unlike a course |
+| POST   | `/likes/like/:courseId`   | Like a course   |
+| POST   | `/likes/unlike/:courseId` | Unlike a course |
 
 #### Feedback
 
@@ -135,8 +171,7 @@ A robust and scalable Learning Management System (LMS) backend built with **Node
 
 | Method | Path                         | Description              |
 | ------ | ---------------------------- | ------------------------ |
-| PATCH  | `/student/enroll/:id`        | Enroll course (internal) |
-| POST   | `/student/follow/:teacherId` | Follow teacher           |
+| POST   | `/students/follow/:teacherId` | Follow teacher           |
 
 #### Quiz Actions
 
@@ -146,4 +181,58 @@ A robust and scalable Learning Management System (LMS) backend built with **Node
 | POST   | `/quizzes/submit/:quizId`   | Submit quiz answers      |
 
 ---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
