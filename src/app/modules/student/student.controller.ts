@@ -15,11 +15,10 @@ const enrollCourse = catchAsync(async (req, res) => {
 });
 
 const followTeacher = catchAsync(async (req, res) => {
-  //   const studentUserId = req.user?._id || "682b93cbe43f74efcd945b22";
-  const studentUserId = "682b93cbe43f74efcd945b22";
+  const userId = req.user?.userId;
   const { teacherId } = req.params;
 
-  const result = await StudentServices.followTeacher(studentUserId, teacherId);
+  const result = await StudentServices.followTeacher(userId, teacherId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

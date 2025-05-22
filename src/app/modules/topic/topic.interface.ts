@@ -5,4 +5,5 @@ export interface ITopic {
   content?: string;
   lessonId: Types.ObjectId;
   quiz?: Types.ObjectId;
+  isDeleted?: boolean;
 }

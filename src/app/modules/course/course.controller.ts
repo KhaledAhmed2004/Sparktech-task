@@ -2,8 +2,13 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { CourseServices } from "./course.service";
 import httpStatus from "http-status";
-const createCourse = catchAsync(async (req, res) => {
-  const result = await CourseServices.createCourseIntoDB(req.body);
+import { Request, Response } from "express";
+
+// Create a new course
+const createCourse = catchAsync(async (req: Request, res: Response) => {
+  const teacherId = req.user?.userId;
+
+  const result = await CourseServices.createCourseIntoDB(req.body, teacherId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -12,9 +17,22 @@ const createCourse = catchAsync(async (req, res) => {
   });
 });
 
-const updateCourse = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const result = await CourseServices.updateCourseIntoDB(id, req.body);
+// Get all courses with filters, search, pagination, etc.
+const getAllCourses = catchAsync(async (req: Request, res: Response) => {
+  const result = await CourseServices.getAllCoursesFromDB(req?.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Courses retrieved successfully",
+    data: result.data,
+  });
+});
+
+// Update an existing course
+const updateCourse = catchAsync(async (req: Request, res: Response) => {
+  const { courseId } = req.params;
+  const result = await CourseServices.updateCourseIntoDB(courseId, req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -23,9 +41,10 @@ const updateCourse = catchAsync(async (req, res) => {
   });
 });
 
-const deleteCourse = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const result = await CourseServices.deleteCourseFromDB(id);
+// Soft-delete a course
+const deleteCourse = catchAsync(async (req: Request, res: Response) => {
+  const { courseId } = req.params;
+  const result = await CourseServices.deleteCourseFromDB(courseId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -34,10 +53,11 @@ const deleteCourse = catchAsync(async (req, res) => {
   });
 });
 
-const enrollCourse = catchAsync(async (req, res) => {
-  const { id } = req.params; // id of the coruse
-  const userId = "682b884a22b8291f0e887e0d"; // id of the student
-  const result = await CourseServices.enrollCourse(id, userId);
+// Enroll a student into a course
+const enrollCourse = catchAsync(async (req: Request, res: Response) => {
+  const { courseId } = req.params;
+  const userId = req.user?.userId;
+  const result = await CourseServices.enrollCourse(courseId, userId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -45,17 +65,43 @@ const enrollCourse = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const getSingleCourse = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const userId = "682b884a22b8291f0e887e0d"; // Replace this with real logged-in user ID
 
-  const result = await CourseServices.getSingleCourseFromDB(id, userId);
-
+// Get single course details
+const getSingleCourse = catchAsync(async (req: Request, res: Response) => {
+  const { courseId } = req.params;
+  const userId = req.user?.userId;
+  const result = await CourseServices.getSingleCourseFromDB(courseId, userId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Course retrieved successfully",
     data: result,
+  });
+});
+const getCoursePerformance = catchAsync(async (req, res) => {
+  const { courseId } = req.params;
+
+  // Get the course by id but only return the needed fields for performance
+  const course = await CourseServices.getCoursePerformanceFromDB(courseId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Course performance fetched successfully",
+    data: course,
+  });
+});
+// Get all students enrolled in a course
+const getEnrolledStudents = catchAsync(async (req: Request, res: Response) => {
+  const { courseId } = req.params;
+
+  const students = await CourseServices.getEnrolledStudentsFromDB(courseId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Enrolled students retrieved successfully",
+    data: students,
   });
 });
 
@@ -65,4 +111,7 @@ export const CourseControllers = {
   deleteCourse,
   enrollCourse,
   getSingleCourse,
+  getAllCourses,
+  getCoursePerformance,
+  getEnrolledStudents,
 };

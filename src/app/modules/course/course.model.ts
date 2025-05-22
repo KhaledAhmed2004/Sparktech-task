@@ -11,8 +11,7 @@ const CourseSchema = new Schema<ICourse>(
     views: { type: Number, default: 0 },
     isDeleted: { type: Boolean, default: false },
     viewedUsers: { type: [Schema.Types.ObjectId], ref: "Student" },
-        totalFeedback: { type: Number, default: 0 },
-
+    totalFeedback: { type: Number, default: 0 },
   },
   {
     timestamps: true,

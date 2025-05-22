@@ -7,7 +7,7 @@ const router = express.Router();
 // user login
 router.post(
   "/login",
-  validateRequest(AuthValidations.LoginValidactionSchema),
+  validateRequest(AuthValidations.LoginValidationSchema),
   AuthControllers.loginuser
 );
 

@@ -1,5 +1,6 @@
 import { Quiz, QuizAttempt } from "./quiz.model";
 import { Topic } from "../topic/topic.model";
+import { IQuiz } from "./quiz.interface";
 
 const createQuiz = async (topicId: string, payload: any) => {
   // Since payload is a single question object, wrap it in an array
@@ -14,9 +15,7 @@ const createQuiz = async (topicId: string, payload: any) => {
   return quiz;
 };
 
-const getAllQuizzes = async () => {
-  return await Quiz.find();
-};
+
 
 const getSingleQuiz = async (id: string) => {
   const quiz = await Quiz.findById(id);
@@ -72,11 +71,29 @@ const submitQuizAttempt = async (
   return { score, total: quiz.questions.length };
 };
 
+const getQuizzesByTopic = async (topicId: string) => {
+  return await Quiz.find({ topicId });
+};
+const updateQuiz = async (id: string, payload: Partial<IQuiz>) => {
+  const updatedQuiz = await Quiz.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!updatedQuiz) {
+    throw new Error("Quiz not found or update failed");
+  }
+
+  return updatedQuiz;
+};
+
+
 export const QuizService = {
   createQuiz,
-  getAllQuizzes,
   getSingleQuiz,
   deleteQuiz,
   getQuizForStudent,
   submitQuizAttempt,
+  getQuizzesByTopic,
+  updateQuiz,
 };

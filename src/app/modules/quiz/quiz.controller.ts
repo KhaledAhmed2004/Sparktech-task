@@ -15,16 +15,7 @@ const createQuiz = catchAsync(async (req, res) => {
   });
 });
 
-const getAllQuizzes = catchAsync(async (req, res) => {
-  const result = await QuizService.getAllQuizzes();
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Quizzes retrieved successfully",
-    data: result,
-  });
-});
 
 const getSingleQuiz = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -74,10 +65,39 @@ const submitQuiz = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const getQuizzesByTopic = catchAsync(async (req, res) => {
+  const { topicId } = req.params;
+  const result = await QuizService.getQuizzesByTopic(topicId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Quizzes for topic retrieved successfully",
+    data: result,
+  });
+});
+
+const updateQuiz = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+
+  const result = await QuizService.updateQuiz(id, updatedData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Quiz updated successfully",
+    data: result,
+  });
+});
+
+
 export const QuizController = {
   createQuiz,
-  getAllQuizzes,
   getSingleQuiz,
   deleteQuiz,
   getQuizForStudent,submitQuiz
+  ,getQuizzesByTopic,
+  updateQuiz
 };

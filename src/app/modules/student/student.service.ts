@@ -57,7 +57,7 @@ const createFeedback = async (courseId: string, payload: IFeedback) => {
   };
 
   const result = await Feedback.create(feedbackData);
-  // 👇 Increment the totalFeedback count
+  // Increment the totalFeedback count
   await Course.findByIdAndUpdate(courseId, { $inc: { totalFeedback: 1 } });
   return result;
 };

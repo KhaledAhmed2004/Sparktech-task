@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 export interface ICourse {
   title: string;
-  description?: string;
+  description: string;
   teacher: Types.ObjectId;
   lessons: Types.ObjectId[];
   likeCount: number;

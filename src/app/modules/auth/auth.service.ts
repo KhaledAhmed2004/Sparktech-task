@@ -40,8 +40,10 @@ const loginUser = async (payload: ILoginUser) => {
     config.jwt_refresh_expires_in as string
   );
 
-  // Return user data and tokens
-  return { user, accessToken, refreshToken };
+  // Convert Mongoose document to plain object and remove the password field
+  const { password, ...userWithoutPassword } = user.toObject();
+
+  return { user: userWithoutPassword, accessToken, refreshToken };
 };
 
 export const AuthServices = { loginUser };

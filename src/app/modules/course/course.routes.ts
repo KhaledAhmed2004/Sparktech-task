@@ -2,22 +2,57 @@ import express from "express";
 import validateRequest from "../../middlewares/validateRequest";
 import { CourseValidations } from "./course.validation";
 import { CourseControllers } from "./course.controller";
-const rotuer = express.Router();
+import auth from "../../middlewares/auth";
 
-rotuer.post(
-  "/create-course",
+const router = express.Router();
+
+// Create a new course
+router.post(
+  "/create",
+  auth("teacher"),
   validateRequest(CourseValidations.createCourseValidationSchema),
   CourseControllers.createCourse
 );
-rotuer.patch(
-  "/:id",
+
+// Get all courses
+router.get("/", auth("student", "teacher"), CourseControllers.getAllCourses);
+
+// Update a course
+router.patch(
+  "/:courseId",
+  auth("teacher"),
   validateRequest(CourseValidations.updateCourseValidationSchema),
   CourseControllers.updateCourse
 );
-rotuer.get("/:id", CourseControllers.getSingleCourse);
 
-rotuer.patch("/enroll/:id", CourseControllers.enrollCourse);
+// Get single course details
+router.get(
+  "/:courseId",
+  auth("student", "teacher"),
+  CourseControllers.getSingleCourse
+);
 
-rotuer.delete("/:id", CourseControllers.deleteCourse);
+// Get all enrolled students for a course
+router.get(
+  "/enrolled-students/:courseId",
+  auth("teacher"), 
+  CourseControllers.getEnrolledStudents
+);
 
-export const CourseRoute = rotuer;
+// Enroll a student in a course
+router.post(
+  "/enroll/:courseId",
+  auth("student"),
+  CourseControllers.enrollCourse
+);
+
+// Soft-delete a course
+router.delete("/:courseId", auth("teacher"), CourseControllers.deleteCourse);
+// Get performance stats of a course (likeCount, views, totalFeedback)
+router.get(
+  "/performance/:courseId",
+  auth("student", "teacher"),
+  CourseControllers.getCoursePerformance
+);
+
+export const CourseRoute = router;

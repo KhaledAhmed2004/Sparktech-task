@@ -15,17 +15,6 @@ const createTopic = catchAsync(async (req, res) => {
   });
 });
 
-const getAllTopics = catchAsync(async (req, res) => {
-  const result = await TopicService.getAllTopics();
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Topics retrieved successfully",
-    data: result,
-  });
-});
-
 const getSingleTopic = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await TopicService.getSingleTopic(id);
@@ -49,10 +38,33 @@ const deleteTopic = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getTopicsByLesson = catchAsync(async (req, res) => {
+  const { lessonId } = req.params;
+  const result = await TopicService.getTopicsByLesson(lessonId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Topics retrieved for the lesson successfully",
+    data: result,
+  });
+});
+const updateTopic = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const updatedTopic = await TopicService.updateTopic(id, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Topic updated successfully",
+    data: updatedTopic,
+  });
+});
 
 export const TopicController = {
   createTopic,
-  getAllTopics,
   getSingleTopic,
   deleteTopic,
+  getTopicsByLesson,
+  updateTopic,
 };

@@ -2,37 +2,58 @@ import { Course } from "../course/course.model";
 import { Lesson } from "./lesson.model";
 
 const createLesson = async (courseId: string, payload: any) => {
-  // First, create the lesson and store it in a variable
   const lesson = await Lesson.create({ ...payload, courseId });
 
-  // Then, push the lesson ID into the course's lessons array
+  // Add lesson to course
   await Course.findByIdAndUpdate(courseId, {
     $push: { lessons: lesson._id },
   });
 
-  // Return the created lesson
   return lesson;
 };
 
-const getAllLessons = async () => {
-  return await Lesson.find().populate("topics");
-};
-
-const getSingleLesson = async (id: string) => {
-  const lesson = await Lesson.findById(id).populate("topics");
+const getSingleLesson = async (lessonId: string) => {
+  const lesson = await Lesson.findById(lessonId).populate("topics");
   if (!lesson) throw new Error("Lesson not found");
   return lesson;
 };
 
-const deleteLesson = async (id: string) => {
-  const deleted = await Lesson.findByIdAndDelete(id);
-  if (!deleted) throw new Error("Lesson not found or already deleted");
-  return deleted;
+const deleteLesson = async (lessonId: string) => {
+  // Mark lesson as deleted
+  const lesson = await Lesson.findByIdAndUpdate(
+    lessonId,
+    { isDeleted: true }, // just set isDeleted to true
+    { new: true }
+  );
+
+  if (!lesson) throw new Error("Lesson not found or already deleted");
+
+  // Remove lesson ID from course lessons array
+  await Course.findByIdAndUpdate(lesson.courseId, {
+    $pull: { lessons: lesson._id },
+  });
+
+  return lesson;
+};
+
+const getLessonsByCourseId = async (courseId: string) => {
+  return Lesson.find({ courseId, isDeleted: false }).populate("topics");
+};
+
+const updateLesson = async (lessonId: string, updatedData: any) => {
+  const lesson = await Lesson.findByIdAndUpdate(lessonId, updatedData, {
+    new: true, // return the updated document
+  }).populate("topics");
+
+  if (!lesson) throw new Error("Lesson not found");
+
+  return lesson;
 };
 
 export const LessonService = {
   createLesson,
-  getAllLessons,
   getSingleLesson,
   deleteLesson,
+  getLessonsByCourseId,
+  updateLesson
 };
